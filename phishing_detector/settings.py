@@ -157,3 +157,13 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1'
 ]
+
+import os
+
+DEBUG = os.getenv("DEBUG", "False") == "True"
+SECRET_KEY = os.getenv("django-insecure-i54o5u^$=e%ev6q*!-_plvr*st8376u9&0njy4@y-zhu_^2y&p")
+# ALLOWED_HOSTS = ["your-subdomain.onrender.com"]
+
+# Static files
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_URL = "/static/"
