@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<!-- <body class="bg-gray-900 text-white flex items-center justify-center min-h-screen p-6"> -->
+
+<body class="bg-gray-900 text-white">
+
+    <!-- Navbar -->
+    <nav class="bg-gray-800 p-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold text-white">ThreatScan</h1>
+
+        <div class="md:hidden flex items-center">
+            <button id="burger" class="text-white focus:outline-none">
+                <div class="w-6 h-0.5 bg-white mb-1"></div>
+                <div class="w-6 h-0.5 bg-white mb-1"></div>
+                <div class="w-6 h-0.5 bg-white"></div>
+            </button>
+        </div>
+
+        <ul class="hidden md:flex space-x-6">
+            <li><a href="{% url 'welcome' %}" class="hover:text-blue-400">Home</a></li>
+            <li><a href="{% url 'contact' %}" class="hover:text-blue-400">Contact Us</a></li>
+            <li><a href="{% url 'about' %}" class="hover:text-blue-400">About</a></li>
+            <li class="relative group">
+                <a href="#" class="hover:text-blue-400">Scan</a>
+                <ul class="absolute hidden  group-hover:block bg-gray-700 p-2 rounded-lg mt-26">
+                    <li><a href="{% url 'Email' %}" class="block px-3 py-1 hover:bg-gray-600">Email</a></li>
+                    <li><a href='#scan-tool' class="block px-3 py-1 hover:bg-gray-600">URL</a></li>
+                    <li><a href="{% url 'scan_qr' %}" class="block px-3 py-1 hover:bg-gray-600">QR</a></li>
+                </ul>
+            </li>
+            <li><a href="{% url 'support' %}" class="hover:text-blue-400">Blog</a></li>
+            
+        </ul>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden flex flex-col bg-gray-800 text-center space-y-4 py-4 md:hidden">
+        <a href="{% url 'welcome' %}" class="hover:text-blue-400">Home</a>
+        <a href="{% url 'contact' %}" class="hover:text-blue-400">Contact Us</a>
+        <a href="{% url 'about' %}" class="hover:text-blue-400">About</a>
+        <a href="{% url 'Email' %}" class="hover:text-blue-400">Scan Email</a>
+        <a href="{% url 'welcome' %}" class="hover:text-blue-400">Scan URL</a>
+        <a href="{% url 'scan_qr' %}" class="hover:text-blue-400">Scan QR</a>
+        <a href="{% url 'support' %}" class="hover:text-blue-400">Blog</a>
+    </div>
+
+    <div class="flex items-center justify-center min-h-screen p-6">
+        <div class="w-full max-w-4xl bg-gray-800 p-6 rounded-lg shadow-lg ">
+            
+            <h2 class="text-4xl font-bold mb-6 ">Latest Blog Posts</h2>
+
+            <div class="space-y-6">
+                <div class="bg-gray-800 p-4 rounded-lg shadow-md blog">
+                    <h3 class="text-2xl font-semibold text-green-400">Understanding Phishing Attacks</h3>
+                    <p class="text-gray-300 mt-2">Phishing attacks trick users into revealing personal information.
+                        Learn how to protect yourself from these cyber threats.</p>
+                    <a href="#" class="text-green-400 hover:underline mt-2 block">Read More →</a>
+                </div>
+
+                <div class="bg-gray-800 p-4 rounded-lg shadow-md blog">
+                    <h3 class="text-2xl font-semibold text-blue-400">How Our Phishing Detection System Works</h3>
+                    <p class="text-gray-300 mt-2">Discover the technology behind our phishing detection system and how
+                        it safeguards your data.</p>
+                    <a href="#" class="text-blue-400 hover:underline mt-2 block">Read More →</a>
+                </div>
+
+                <div class="bg-gray-800 p-4 rounded-lg shadow-md blog">
+                    <h3 class="text-2xl font-semibold text-red-400">Top 5 Cybersecurity Tips</h3>
+                    <p class="text-gray-300 mt-2">Improve your online security with these essential tips to stay safe
+                        from phishing and cyber threats.</p>
+                    <a href="#" class="text-red-400 hover:underline mt-2 block">Read More →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        gsap.from("h2", { opacity: 0, y: -20, duration: 0.6 });
+        gsap.from(".blog", { opacity: 0, x: 20, duration: 0.6, stagger: 0.3 });
+
+        document.getElementById("burger").addEventListener("click", function () {
+            document.getElementById("mobile-menu").classList.toggle("hidden");
+        });
+    </script>
+</body>
+
+</html>
