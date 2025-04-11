@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -82,7 +83,7 @@ TEMPLATES = [
 
 
 
-WSGI_APPLICATION = 'phishing_detector.wsgi.application'
+# WSGI_APPLICATION = 'phishing_detector.wsgi.application'
 
 # AUTH_USER_MODEL = "users.customer"
 
@@ -158,12 +159,7 @@ ALLOWED_HOSTS = [
     '127.0.0.1'
 ]
 
-import os
 
-DEBUG = os.getenv("DEBUG", "False") == "True"
-SECRET_KEY = os.getenv("django-insecure-i54o5u^$=e%ev6q*!-_plvr*st8376u9&0njy4@y-zhu_^2y&p")
-# ALLOWED_HOSTS = ["your-subdomain.onrender.com"]
 
-# Static files
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-STATIC_URL = "/static/"
+
+STATICSTORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
