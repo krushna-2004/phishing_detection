@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: phishing-django
+    env: docker
+    plan: free
+    region: oregon
+    branch: main
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: phishing_detection.settings
+      - key: SECRET_KEY
+        value: your-django-secret-key
+      - key: DEBUG
+        value: "False"
