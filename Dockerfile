@@ -1,24 +1,24 @@
-# Use an official Python image
+# Use slim Python base image
 FROM python:3.11-slim
 
-# Install dependencies for opencv-python and pyzbar
+# Install OS-level dependencies for pyzbar and OpenCV
 RUN apt-get update && apt-get install -y \
     build-essential \
     libzbar0 \
-    libglib2.0-0 \
     libsm6 \
-    libxrender1 \
     libxext6 \
+    libxrender1 \
+    libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-# Set environment vars
+# Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Set working directory
+# Set work directory
 WORKDIR /app
 
-# Install dependencies
+# Install Python dependencies
 COPY requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
@@ -26,5 +26,5 @@ RUN pip install -r requirements.txt
 # Copy project
 COPY . .
 
-# Run migrations and start server
+# Run migrations and start Gunicorn
 CMD ["sh", "-c", "python manage.py migrate && gunicorn phishing_detection.wsgi:application --bind 0.0.0.0:$PORT"]
