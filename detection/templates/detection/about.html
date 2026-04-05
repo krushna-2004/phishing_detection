@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+
+<body class="bg-gray-900 text-white">
+    <nav class="bg-gray-800 p-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold text-white">ThreatScan</h1>
+
+        <div class="md:hidden flex items-center">
+            <button id="burger" class="text-white focus:outline-none">
+                <div class="w-6 h-0.5 bg-white mb-1"></div>
+                <div class="w-6 h-0.5 bg-white mb-1"></div>
+                <div class="w-6 h-0.5 bg-white"></div>
+            </button>
+        </div>
+
+        <ul class="hidden md:flex space-x-6">
+            <li><a href="{% url 'welcome' %}" class="hover:text-blue-400">Home</a></li>
+            <li><a href="{% url 'contact' %}" class="hover:text-blue-400">Contact Us</a></li>
+            <li><a href="{% url 'about' %}" class="hover:text-blue-400">About</a></li>
+            <li class="relative group">
+                <a href="#" class="hover:text-blue-400">Scan</a>
+                <ul class="absolute hidden  group-hover:block bg-gray-700 p-2 rounded-lg mt-26">
+                    <li><a href="{% url 'Email' %}" class="block px-3 py-1 hover:bg-gray-600">Email</a></li>
+                    <li><a href='#scan-tool' class="block px-3 py-1 hover:bg-gray-600">URL</a></li>
+                    <li><a href="{% url 'scan_qr' %}" class="block px-3 py-1 hover:bg-gray-600">QR</a></li>
+                </ul>
+            </li>
+            <li><a href="{% url 'support' %}" class="hover:text-blue-400">Blog</a></li>
+            
+        </ul>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden flex flex-col bg-gray-800 text-center space-y-4 py-4 md:hidden">
+        <a href="{% url 'welcome' %}" class="hover:text-blue-400">Home</a>
+        <a href="{% url 'contact' %}" class="hover:text-blue-400">Contact Us</a>
+        <a href="{% url 'about' %}" class="hover:text-blue-400">About</a>
+        <a href="{% url 'Email' %}" class="hover:text-blue-400">Scan Email</a>
+        <a href="{% url 'welcome' %}" class="hover:text-blue-400">Scan URL</a>
+        <a href="{% url 'scan_qr' %}" class="hover:text-blue-400">Scan QR</a>
+        <a href="{% url 'support' %}" class="hover:text-blue-400">Blog</a>
+    </div>
+
+    <div class="flex items-center justify-center min-h-screen p-6">
+        <div class="w-full max-w-4xl bg-gray-800 p-6 rounded-lg shadow-lg">
+            <h2 class="text-4xl font-bold mb-6">About Us</h2>
+            <p class="text-gray-400 mb-4">
+                Welcome to our Phishing Detection System! Our mission is to provide cutting-edge security solutions to
+                protect individuals and businesses from cyber threats.
+            </p>
+            <p class="text-gray-400 mb-4">
+                With a team of dedicated cybersecurity experts, we aim to detect and mitigate phishing attacks using
+                advanced algorithms and machine learning.
+            </p>
+            <p class="text-gray-400 mb-4">
+                Our goal is to create a safer digital environment where users can browse the internet with confidence,
+                knowing they are protected from malicious threats.
+            </p>
+        </div>
+    </div>
+    <script>
+        gsap.from("h2", { opacity: 0, y: -20, duration: 0.6 });
+        gsap.from("p", { opacity: 0, x: 20, duration: 0.6, stagger: 0.2 });
+
+        document.getElementById("burger").addEventListener("click", function () {
+            document.getElementById("mobile-menu").classList.toggle("hidden");
+        });
+    </script>
+</body>
+
+</html>

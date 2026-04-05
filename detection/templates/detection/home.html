@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThreatScan - Phishing Detection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+</head>
+
+<body class="bg-gray-900 text-white">
+
+    <!-- Navbar -->
+    <nav class="bg-gray-800 p-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold text-white">ThreatScan</h1>
+
+        <div class="md:hidden flex items-center">
+            <button id="burger" class="text-white focus:outline-none">
+                <div class="w-6 h-0.5 bg-white mb-1"></div>
+                <div class="w-6 h-0.5 bg-white mb-1"></div>
+                <div class="w-6 h-0.5 bg-white"></div>
+            </button>
+        </div>
+
+        <ul class="hidden md:flex space-x-6">
+            <li><a href="{% url 'welcome' %}" class="hover:text-blue-400">Home</a></li>
+            <li><a href="{% url 'contact' %}" class="hover:text-blue-400">Contact Us</a></li>
+            <li><a href="{% url 'about' %}" class="hover:text-blue-400">About</a></li>
+            <li class="relative group">
+                <a href="#" class="hover:text-blue-400">Scan</a>
+                <ul class="absolute hidden  group-hover:block bg-gray-700 p-2 rounded-lg mt-26">
+                    <li><a href="{% url 'Email' %}" class="block px-3 py-1 hover:bg-gray-600">Email</a></li>
+                    <li><a href='#scan-tool' class="block px-3 py-1 hover:bg-gray-600">URL</a></li>
+                    <li><a href="{% url 'scan_qr' %}" class="block px-3 py-1 hover:bg-gray-600">QR</a></li>
+                </ul>
+            </li>
+            <li><a href="{% url 'support' %}" class="hover:text-blue-400">Blog</a></li>
+
+            {% if request.user.is_authenticated %}
+            <li>Welcome, <strong>{{ request.user.username }}</strong></li>
+            <li><a href="{% url 'logout' %}" class="hover:text-red-400">Logout</a></li>
+            {% else %}
+
+            {% endif %}
+            </li>
+            <li class="cursor-pointer hover:text-blue-400" onclick="togglePopup()">Login/Register</li>
+        </ul>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden flex flex-col bg-gray-800 text-center space-y-4 py-4 md:hidden">
+        <a href="{% url 'welcome' %}" class="hover:text-blue-400">Home</a>
+        <a href="{% url 'contact' %}" class="hover:text-blue-400">Contact Us</a>
+        <a href="{% url 'about' %}" class="hover:text-blue-400">About</a>
+        <a href="{% url 'Email' %}" class="hover:text-blue-400">Scan Email</a>
+        <a href='#scan-tool' class="hover:text-blue-400">Scan URL</a>
+        <a href="{% url 'scan_qr' %}" class="hover:text-blue-400">Scan QR</a>
+        <a href="{% url 'support' %}" class="hover:text-blue-400">Blog</a>
+        <a href="#" onclick="togglePopup()" class="hover:text-blue-400">Login/Register</a>
+    </div>
+
+    <!-- Popup Login/Register -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center" id="popupOverlay">
+        <div class="bg-gray-800 p-6 rounded-lg w-80">
+            <div class="flex justify-between text-white">
+                <h2 class="text-lg">Please Login or Sign Up</h2>
+                <button onclick="togglePopup()" class="text-2xl">&times;</button>
+            </div>
+            <div class="flex justify-center mt-4 gap-6">
+                <button id="signinTab" class="bg-gray-300 hover:bg-gray-400 text-gray-800  py-2 px-4 rounded-l "
+                    onclick="showSignIn()">Sign In</button>
+
+                <button id="signupTab" class="bg-gray-300 hover:bg-gray-400 text-gray-800  py-2 px-4 rounded-r "
+                    onclick="showSignUp()">Sign
+                    Up</button>
+            </div>
+            <div class="mt-4">
+                <div id="signinContent" class="mt-4">
+                    <form method="POST" action="{% url 'signin' %}">
+                        {% csrf_token %}
+                        <input type="text" name="username" placeholder="Username or Email"
+                            class="w-full p-2 my-2 bg-gray-700 rounded text-white">
+                        <input type="password" name="password" placeholder="Password"
+                            class="w-full p-2 my-2 bg-gray-700 rounded text-white">
+                        <button type="submit" class="w-full p-2 bg-blue-600 rounded">Sign In</button>
+
+                    </form>
+                </div>
+                <div id="signupContent" class="mt-4 hidden">
+                    <form method="POST" action="{% url 'signup' %}">
+                        {% csrf_token %}
+                        <input type="text" name="full_name" placeholder="Full Name"
+                            class="w-full p-2 my-2 bg-gray-700 rounded text-white">
+                        <input type="email" name="email" placeholder="Email Address"
+                            class="w-full p-2 my-2 bg-gray-700 rounded text-white">
+                        <input type="password" name="password" placeholder="Password"
+                            class="w-full p-2 my-2 bg-gray-700 rounded text-white">
+                        <input type="password" name="confirm_password" placeholder="Confirm Password"
+                            class="w-full p-2 my-2 bg-gray-700 rounded text-white">
+                        <button type="submit" class="w-full p-2 bg-blue-600 rounded">Sign Up</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="text-center py-12">
+
+        <h1 class="text-4xl font-bold">Stay Protected from Online Threats</h1>
+        <p class="mt-2 text-gray-400">Detect and prevent phishing attacks instantly with our advanced system.</p>
+        <div class="mt-4">
+            <a href="#scan-tool"><button class="bg-blue-500 px-6 py-2 rounded-lg hover:bg-blue-600">Start
+                    Scanning</button></a>
+            <a href="{% url 'Info' %}"><button class="bg-gray-700 px-6 py-2 rounded-lg ml-4 hover:bg-gray-600">Learn
+                    More</button></a>
+        </div>
+    </section>
+
+
+    <!-- Features Section -->
+    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-xl font-semibold">Real-Time Detection</h3>
+            <p class="text-gray-400 mt-2">Identify phishing links and emails instantly.</p>
+        </div>
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-xl font-semibold">AI-Powered Insights</h3>
+            <p class="text-gray-400 mt-2">Leverage advanced algorithms for accurate analysis.</p>
+        </div>
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-xl font-semibold">User-Friendly Interface</h3>
+            <p class="text-gray-400 mt-2">Easy to use for everyone.</p>
+        </div>
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-xl font-semibold">Comprehensive Reports</h3>
+            <p class="text-gray-400 mt-2">Get detailed insights into detected threats.</p>
+        </div>
+    </section>
+    <section id="scan-tool" class="text-center py-10">
+        <form method="post" action="{% url 'scan' %}" onsubmit="validateForm(event)" class="mt-4">
+            {% csrf_token %}
+            <label for="url-input" class="block text-lg font-medium mb-2">Enter URL or Email</label>
+            <input type="text" name="url" id="url-input" placeholder="Enter URL or Email"
+                class="p-2 rounded bg-gray-700">
+            <button type="submit" class="bg-blue-500 p-2 hover:bg-blue-600 rounded">
+                Scan Now
+            </button>
+            <p id="error-message" class="error-message hidden">Please enter a URL to scan.</p>
+        </form>
+        {% if messages %}
+        <div id="alertBox"
+            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white p-3 rounded shadow-lg">
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </section>
+
+    <script>
+        function validateForm(event) {
+            var urlInput = document.getElementById("url-input").value.trim();
+            var errorMessage = document.getElementById("error-message");
+
+            if (!urlInput) {
+                event.preventDefault(); // Prevent form submission
+                errorMessage.textContent = "Please enter a URL to scan.";
+                errorMessage.classList.remove("hidden"); // Show error message
+            } else {
+                errorMessage.classList.add("hidden"); // Hide error message if input is valid
+            }
+        }
+        function togglePopup() {
+            document.getElementById("popupOverlay").classList.toggle("hidden");
+        }
+
+        document.querySelector('#signinTab').style.backgroundColor = "#1E88E5";
+
+        function showSignIn() {
+            document.getElementById("signinContent").classList.remove("hidden");
+            document.getElementById("signupContent").classList.add("hidden");
+            document.querySelector('#signinTab').style.backgroundColor = "#1E88E5";
+            document.querySelector("#signupTab").style.backgroundColor = ""; // Removes inline color
+
+        }
+
+        function showSignUp() {
+            document.getElementById("signupContent").classList.remove("hidden");
+            document.getElementById("signinContent").classList.add("hidden");
+            document.querySelector('#signupTab').style.backgroundColor = "#1E88E5";
+            document.querySelector("#signinTab").style.backgroundColor = ""; // Removes inline color
+
+        }
+
+
+        document.getElementById("burger").addEventListener("click", function () {
+            document.getElementById("mobile-menu").classList.toggle("hidden");
+        });
+
+        setTimeout(() => {
+            document.getElementById("alertBox").style.display = "none";
+        }, 3000);  // Auto-hide alert after 3 seconds
+    </script>
+
+</body>
+
+</html>
+
+
+<!-- const firebaseConfig = {
+    apiKey: "AIzaSyAuZ_lCU9OJC7TyEBLFE7-2jH35NgLACxs",
+    authDomain: "django-59bf7.firebaseapp.com",
+    projectId: "django-59bf7",
+    storageBucket: "django-59bf7.firebasestorage.app",
+    messagingSenderId: "12123261543",
+    appId: "1:12123261543:web:4e1763dff0593288f662c2",
+    measurementId: "G-MX5PSP82BS"
+}; -->
