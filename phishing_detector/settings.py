@@ -170,7 +170,8 @@ ALLOWED_HOSTS = [
     'krushna05.pythonanywhere.com',
     'shirsathkrushna2004.pythonanywhere.com',
     'localhost',
-    '127.0.0.1'
+    '127.0.0.1',
+    "phishing-detection-1-8vyx.onrender.com"
 ]
 
 
